@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Prison Break Quiz</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 50px; }
+        .card { background: #333; padding: 20px; border-radius: 10px; display: inline-block; min-width: 300px; }
+        button { background: #e74c3c; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; border-radius: 5px; }
+        button:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+<div class="card" id="quiz-container">
+    <h1>Prison Break Quiz</h1>
+    <p>Hangi karaktersin öğrenmeye hazır mısın?</p>
+    <button onclick="startQuiz()">Sınava Başla</button>
+</div>
+
+<script>
+    let sessionId = "";
+
+    async function startQuiz() {
+        const res = await fetch('/api/quiz/start', { method: 'POST' });
+        const data = await res.json();
+        sessionId = data.sessionId;
+        showQuestion(data);
+    }
+
+    function showQuestion(data) {
+        let html = `<h3>Soru ${data.questionNumber}: ${data.question.text}</h3>`;
+        data.question.answers.forEach((ans, index) => {
+            html += `<button onclick="sendAnswer(${index})">${ans.text}</button><br>`;
+        });
+        document.getElementById('quiz-container').innerHTML = html;
+    }
+
+    async function sendAnswer(index) {
+        const res = await fetch('/api/quiz/answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId: sessionId, answerIndex: index })
+        });
+        const data = await res.json();
+        if (data.finished) {
+            document.getElementById('quiz-container').innerHTML = `
+                    <h2>Sonuç: ${data.result.character}</h2>
+                    <p>${data.result.description}</p>
+                    <button onclick="location.reload()">Tekrar Dene</button>`;
+        } else {
+            showQuestion(data);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+services:
+  prison-break-quiz:
+    build: .
+    container_name: pb-quiz-app
+    ports:
+      - "9090:9090"  # <--- Burayı 9090 yaptık
+    restart: unless-stopped

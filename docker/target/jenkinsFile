@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        // Docker imaj adı ve konteyner adı tanımlamaları
+        IMAGE_NAME = "pb-quiz-app"
+        CONTAINER_NAME = "pb-quiz-container"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Kodları GitHub'dan çekme
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                // Projeyi Docker içinde derleyeceğimiz için burayı Dockerfile halledecek,
+                // ancak istersen burada sadece testleri koşturabilirsin.
+                echo 'Uygulama derleme aşamasına hazırlanıyor...'
+            }
+        }
+
+        stage('Docker Build & Deploy') {
+            steps {
+                script {
+                    // 1. Varsa eski konteynerı durdur ve sil
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    sh "docker rm ${CONTAINER_NAME} || true"
+
+                    // 2. Yeni imajı build et (Dockerfile'daki multi-stage yapısını kullanır)
+                    sh "docker build -t ${IMAGE_NAME} ."
+
+                    // 3. Yeni konteynerı 9090 portundan ayağa kaldır
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 9090:9090 ${IMAGE_NAME}"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD Akışı başarıyla tamamlandı. Uygulama port 9090 üzerinde yayında!'
+        }
+        failure {
+            echo 'Bir hata oluştu. Lütfen logları kontrol edin.'
+        }
+    }
+}
