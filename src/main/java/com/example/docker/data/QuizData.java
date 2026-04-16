@@ -13,7 +13,7 @@ public class QuizData {
 
     public List<Question> getQuestions() {
         return Arrays.asList(
-                new Question(1, "Zor bir durumda ne yaparsın?", Arrays.asList(
+                new Question(1, "Zor bir durumda ne yaparsın deneme ?", Arrays.asList(
                         new Question.Answer("Önceden detaylı plan yaparım", "MICHAEL"),
                         new Question.Answer("Güvendiğim birine danışırım", "LINCOLN"),
                         new Question.Answer("Komik bir şey söyleyip ortamı yumuşatırım", "SUCRE"),
