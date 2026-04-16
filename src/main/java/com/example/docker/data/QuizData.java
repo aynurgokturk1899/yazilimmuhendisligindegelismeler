@@ -60,7 +60,7 @@ public class QuizData {
                 ),
                 "SUCRE", new CharacterInfo(
                         "Fernando Sucre",
-                        "Sadık dost! Herkese iyi davranırsın, pozitif enerjinle ortamı aydınlatırsın. Aşk seni her zaman motive eder. ¡Papi!",
+                        "Sadık dost! Herkese iyi davranırsın, pozitif enerjinle ortamı aydınlatırsın. Aşk seni her zaman motive eder. ¡Papi! harikasın ",
                         "Neşeli, sadık, sevgi dolu"
                 ),
                 "TBAG", new CharacterInfo(
